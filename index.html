@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>新年祝福</title>
+  <title>小鼠来咯</title>
   <style>
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000000; color: #f8f5ff; }
     #scene-root, #fireworks-canvas { position: fixed; inset: 0; }
@@ -13,7 +13,7 @@
     .hidden { opacity: 0; visibility: hidden; }
     .music-btn { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 14; border: 1px solid rgba(255, 221, 183, 0.45); color: #ffe7c7; background: rgba(12, 18, 34, 0.55); border-radius: 999px; padding: 10px 14px; }
   </style>
-  <link rel="stylesheet" href="./style.css?v=20260216g" />
+  <link rel="stylesheet" href="./style.css?v=20260216h" />
 </head>
 <body>
   <div id="scene-root"></div>
@@ -29,18 +29,18 @@
     播放音乐
   </button>
 
-  <audio id="bgm" src="./assets/bgm.mp3?v=20260216g" preload="auto" loop></audio>
+  <audio id="bgm" src="./assets/bgm.mp3?v=20260216h" preload="auto" loop playsinline webkit-playsinline></audio>
 
   <script>
     (function () {
       const threeSources = [
-        "./assets/vendor/three.min.js?v=20260216g",
+        "./assets/vendor/three.min.js?v=20260216h",
         "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js",
         "https://unpkg.com/three@0.160.1/build/three.min.js"
       ];
 
       const orbitScriptSources = [
-        "./assets/vendor/OrbitControls.global.js?v=20260216g"
+        "./assets/vendor/OrbitControls.global.js?v=20260216h"
       ];
 
       const orbitModuleSources = [
@@ -122,6 +122,7 @@
       });
     })();
   </script>
-  <script defer src="./main.js?v=20260216g"></script>
+  <script defer src="./main.js?v=20260216h"></script>
 </body>
 </html>
+

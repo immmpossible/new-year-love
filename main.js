@@ -323,6 +323,8 @@ async function startLoveNoteTyping() {
 
 function bindMusicButton() {
   checkBgmFile();
+  void tryPlayBgm("init");
+  startAutoPlayAssistant();
 
   app.musicBtn.addEventListener("click", async () => {
     if (app.musicBtn.classList.contains("disabled")) {
@@ -330,13 +332,7 @@ function bindMusicButton() {
     }
 
     if (!audioEnabled || app.bgm.paused) {
-      try {
-        await app.bgm.play();
-        audioEnabled = true;
-        app.musicBtn.textContent = "暂停音乐";
-      } catch (err) {
-        console.warn("播放失败，需要用户再次点击", err);
-      }
+      await tryPlayBgm("button");
     } else {
       app.bgm.pause();
       app.musicBtn.textContent = "播放音乐";
@@ -359,6 +355,64 @@ function bindMusicButton() {
   });
 }
 
+
+function startAutoPlayAssistant() {
+  if (app.musicBtn.classList.contains("disabled")) {
+    return;
+  }
+
+  function cleanup() {
+    window.removeEventListener("pointerdown", onFirstGesture, true);
+    window.removeEventListener("touchstart", onFirstGesture, true);
+    window.removeEventListener("keydown", onFirstGesture, true);
+  }
+
+  async function onFirstGesture() {
+    const ok = await tryPlayBgm("gesture");
+    if (ok) {
+      cleanup();
+    }
+  }
+
+  window.addEventListener("pointerdown", onFirstGesture, { passive: true, capture: true });
+  window.addEventListener("touchstart", onFirstGesture, { passive: true, capture: true });
+  window.addEventListener("keydown", onFirstGesture, { passive: true, capture: true });
+}
+
+async function tryPlayBgm(reason = "manual") {
+  if (app.musicBtn.classList.contains("disabled")) {
+    return false;
+  }
+
+  if (!app.bgm.paused) {
+    audioEnabled = true;
+    app.musicBtn.textContent = "暂停音乐";
+    return true;
+  }
+
+  const shouldMuteBoot = reason === "init";
+  if (shouldMuteBoot) {
+    app.bgm.muted = true;
+  }
+
+  try {
+    await app.bgm.play();
+    audioEnabled = true;
+    if (shouldMuteBoot) {
+      app.bgm.muted = false;
+    }
+    app.musicBtn.textContent = "暂停音乐";
+    return true;
+  } catch (err) {
+    if (shouldMuteBoot) {
+      app.bgm.muted = false;
+    }
+    if (reason === "button") {
+      console.warn("播放失败，需要用户再次点击", err);
+    }
+    return false;
+  }
+}
 async function checkBgmFile() {
   const src = app.bgm.getAttribute("src");
   if (!src) {
@@ -1306,3 +1360,4 @@ function detectQuality() {
     sampleStep: 3,
   };
 }
+
